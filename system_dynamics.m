@@ -18,6 +18,7 @@ function dxdt = system_dynamics(X, u)
     y_com = X(3); 
     y_com_dot = X(4);
     phi = X(5); 
+    
     if phi > 2*pi
         phi = phi - 2*pi;
     elseif phi < 0

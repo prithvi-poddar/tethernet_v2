@@ -1,4 +1,4 @@
-clf; clear all; close all;
+clc; clear all; close all;
 
 %% Defining the constants
 t0 = 0;
@@ -13,7 +13,7 @@ ro = 5.5;
 L = 22;
 
 %% boundary conditions
-x_com_0 = 30;
+x_com_0 = -30;
 x_com_dot_0 = 0;
 y_com_0 = 30;
 y_com_dot_0 = 0;
@@ -50,7 +50,7 @@ ub= [20, 5, 5, deg2rad(355), deg2rad(355)];
 
 for i = 1:length(x_com_init)
     X0 = [X0, [x_com_init(i), x_com_dot_init(i), y_com_init(i), y_com_dot_init(i), phi_init(i), phi_dot_init(i), f1_init(i+1), f2_init(i+1), theta1_init(i+1), theta2_init(i+1)]];
-    lb = [lb, [-50, -1000, -50, -1000, 0, -20*pi, 0, 0, deg2rad(5), deg2rad(5)]];
+    lb = [lb, [-50, -1000, -50, -1000, -2*pi, -20*pi, 0, 0, deg2rad(5), deg2rad(5)]];
     ub = [ub, [50, 1000, 50, 1000, 2*pi, 20*pi, 5, 5, deg2rad(355), deg2rad(355)]];
 end
 
