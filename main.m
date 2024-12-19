@@ -13,9 +13,9 @@ ro = 5.5;
 L = 22;
 
 %% boundary conditions
-x_com_0 = -30;
+x_com_0 = 30;
 x_com_dot_0 = 0;
-y_com_0 = 30;
+y_com_0 = 0;
 y_com_dot_0 = 0;
 phi_0 = 0;
 phi_dot_0 = 0;
@@ -115,39 +115,84 @@ y2_opt = y_com_opt + L/2*sin(phi_opt);
 % x_com = (x1_opt + x2_opt)/2;
 % y_com = (y1_opt + y2_opt)/2;
 
-figure(1); % Open a new figure window for the first plot
+
+figure;
+subplot(2, 2, 1);
 plot(time*z_opt, x_com_opt, 'r', 'LineWidth', 1.5);
 hold on;
 plot(time*z_opt, y_com_opt, 'b', 'LineWidth', 1.5);
-title('Tracking the COM of the net');
-xlabel('time');
-ylabel('position');
-legend('x_{com}', 'y_{com}', 'Location', 'best');
+tf =z_opt;
+xline(tf, '--k', 'LineWidth', 1.5); 
+text(tf - 0.1, 1, sprintf('t_f = %.2f s', tf), 'FontSize', 20, 'Color', 'k', 'HorizontalAlignment', 'right');
+title('Tracking the COM of the net', 'FontSize', 15);
+xlabel('time', 'FontSize', 30);
+ylabel('position', 'FontSize', 30);
+ax = gca; 
+ax.FontSize = 20;
+legend('x_{com}', 'y_{com}', 't_f', 'Location', 'best', 'FontSize', 20);
 hold off;
 grid on;
 
-figure(2); % Open a new figure window for the first plot
+subplot(2, 2, 2);
 plot(time*z_opt, f1_opt, 'r', 'LineWidth', 1.5);
 hold on;
 plot(time*z_opt, f2_opt, 'b', 'LineWidth', 1.5);
-title('Thrust vs. Time');
-xlabel('time');
-ylabel('Force (N)');
-legend('F_1', 'F_2', 'Location', 'best');
+tf =z_opt;
+xline(tf, '--k', 'LineWidth', 1.5); 
+% text(tf - 0.1, 0, sprintf('t_f = %.2f s', tf), 'FontSize', 20, 'Color', 'k', 'HorizontalAlignment', 'right');
+title('Thrust Magnitude vs. Time', 'FontSize', 15);
+xlabel('time', 'FontSize', 30);
+ylabel('Force (N)', 'FontSize', 30);
+ax = gca; 
+ax.FontSize = 20;
+legend('F_1', 'F_2', 't_f', 'Location', 'best', 'FontSize', 20);
 hold off;
 grid on;
 
-figure(3); % Open a new figure window for the first plot
+subplot(2, 2, 3);
 plot(time*z_opt, rad2deg(theta1_opt), 'r', 'LineWidth', 1.5);
 hold on;
 plot(time*z_opt, rad2deg(theta2_opt), 'b', 'LineWidth', 1.5);
-title('Thrust Angle vs. Time');
-xlabel('time');
-ylabel('Angle (degrees)');
-legend('\theta_1', '\theta_2', 'Location', 'best');
+tf =z_opt;
+xline(tf, '--k', 'LineWidth', 1.5); 
+% text(tf - 0.1, 0, sprintf('t_f = %.2f s', tf), 'FontSize', 20, 'Color', 'k', 'HorizontalAlignment', 'right');
+title('Thrust Angle vs. Time', 'FontSize', 15);
+xlabel('time', 'FontSize', 30);
+ylabel('Angle (degrees)', 'FontSize', 30);
+ax = gca; 
+ax.FontSize = 20;
+legend('\theta_1', '\theta_2', 't_f', 'Location', 'best', 'FontSize', 20);
 hold off;
 grid on;
 
+subplot(2, 2, 4);
+x1 = x1_opt; 
+y1 = y1_opt; 
+x2 = x2_opt; 
+y2 = y2_opt;
+hold on;
+axis equal;
+% axis([-50 50 -50 50]); % Set axis limits
+grid on;
+
+% Stationary circle (plotted once)
+theta = linspace(0, 2 * pi, 100);
+fill(xo + ro * cos(theta), yo + ro * sin(theta), 'b', 'FaceAlpha', 0.5);
+
+
+% Animate the motion
+for i = 1:length(x1)
+
+    if mod(i, 10) == 0
+        plot([x1(i), x2(i)], [y1(i), y2(i)], 'b-', 'LineWidth', 2); 
+        scatter([x1(i), x2(i)], [y1(i), y2(i)], 100, 'g', 'filled');
+    end
+end
+ax = gca; 
+ax.FontSize = 20;
+title("Trajectory of the tether-net", 'FontSize', 20);
+
+hold off;
 
 %% Simulate
 
@@ -187,30 +232,6 @@ for i = 1:length(x1)
 
     % Pause for visualization
     pause(dt);
-end
-
-hold off;
-
-%% Plotting Complete Trajectory
-
-figure('Position', [10, 10, 800, 800]);
-hold on;
-axis equal;
-axis([-50 50 -50 50]); % Set axis limits
-grid on;
-
-% Stationary circle (plotted once)
-theta = linspace(0, 2 * pi, 100);
-fill(xo + ro * cos(theta), yo + ro * sin(theta), 'b', 'FaceAlpha', 0.5);
-
-
-% Animate the motion
-for i = 1:length(x1)
-
-    if mod(i, 10) == 0
-        plot([x1(i), x2(i)], [y1(i), y2(i)], 'b-', 'LineWidth', 2); 
-        scatter([x1(i), x2(i)], [y1(i), y2(i)], 100, 'g', 'filled');
-    end
 end
 
 hold off;
